@@ -31,7 +31,8 @@ endif()
 include_directories(submodules/rlImGui)
 
 # hidapi (unsure)
-find_package(hidapi REQUIRED)
+add_subdirectory(submodules/hidapi)
+include_directories(submodules/hidapi/hidapi)
 
 
 # DearImGui (submodule)
