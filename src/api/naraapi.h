@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <string>
 #include <hidapi/hidapi.h>
 
 
@@ -14,16 +13,13 @@ struct API_LED_DATA
 	uint8_t g;
 	uint8_t b;
 	uint8_t color_table_number;
-	void to_array(uint8_t *arr) {
-		
-	}
 };
 
 
 #define CMD_0X11_SIZE 56
 
 // NOTE: All of these fields, barring led_fn, have unknown purposes.
-// #pragma pack(1)
+#pragma pack(1)
 struct API_CMD_0X11 {
 	uint8_t valid;
 	uint8_t led_class;
