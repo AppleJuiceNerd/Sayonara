@@ -2,6 +2,7 @@
 #include <hidapi.h>
 #include <string.h>
 
+
 // NOTE: While it may not happen, this function may not work properly with odd-length arrays.
 uint16_t Nara::LL::checksum(uint8_t *data, int length)
 {
