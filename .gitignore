@@ -1,3 +1,6 @@
-obj
-bin
+.cache
 .vscode
+build
+
+# Should I be tracking this?
+CMakeCache.txt
