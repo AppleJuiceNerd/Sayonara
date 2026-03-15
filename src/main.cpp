@@ -15,7 +15,7 @@
 void about_window()
 {
 	
-	ImGui::Begin("About", NULL, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("About", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
 	
 		
 	
