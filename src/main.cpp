@@ -151,9 +151,6 @@ int main()
 	print_devices(devices);
 	hid_free_enumeration(devices);
 
-	
-
-
 	// Setup window + imgui things
 	Vector2 aspect_ratio = {3, 2};
 	int mul = 400;
@@ -162,6 +159,7 @@ int main()
 	SetTargetFPS(60);
 
 	rlImGuiSetup(true);
+
 	while(!WindowShouldClose())
 	{
 		
@@ -170,17 +168,11 @@ int main()
 		ClearBackground(BLACK);
 
 		rlImGuiBegin();
-		// if (ImGui::Button("Silly!"))
-		// {
-		// 	ImGui::ShowDemoWindow();
-		// }
-		
 		
 		sn_window(); 
 
 		rlImGuiEnd();
-
-		// DrawCircle(400, 400, 100, {255, 0, 255, 255});
+;
 
 		EndDrawing();
 	}
@@ -189,24 +181,6 @@ int main()
 	// Clean up
 	Nara::Exit();
 	rlImGuiShutdown();
-
-
-	// Nara::Init();
-	
-	// Nara::Sayo sayo = Nara::Sayo();
-
-	// for(int i = 0; i < 1000; i++)
-	// 	printf("(%d, %d, %d)\n", sayo.ReadLight(0, 0).r, sayo.ReadLight(0, 0).g, sayo.ReadLight(0, 0).b);
-
-	// Nara::Exit();
-
-	
-	
-
-	
-
-
-	// That's it!
 
 	return 0;
 }
