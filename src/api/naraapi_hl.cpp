@@ -2,7 +2,6 @@
 #include <cstring>
 #include <hidapi.h>
 
-
 int Nara::Init()
 {
 	return hid_init();
@@ -21,8 +20,11 @@ Nara::Sayo::Sayo()
 	// SayoDevice vendor code is 0x8089
 	devices = hid_enumerate(0x8089, 0x0);
 
-	// Loop through all found devices
-	devices = devices->next; // should get the other path, which is writable
+	// The fourth device is writable on both Windows and Linux
+	devices = devices->next; 
+	devices = devices->next; 
+	devices = devices->next; 
+
 	device = hid_open_path(devices->path);
 	
 	hid_free_enumeration(devices);
