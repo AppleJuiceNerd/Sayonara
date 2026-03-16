@@ -32,7 +32,7 @@ include_directories(submodules/rlImGui)
 
 # hidapi (unsure)
 add_subdirectory(submodules/hidapi)
-include_directories(submodules/hidapi/hidapi)
+include_directories(submodules/hidapi)
 
 
 # DearImGui (submodule)
