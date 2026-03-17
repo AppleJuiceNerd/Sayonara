@@ -18,7 +18,7 @@ void about_window(bool *p_open)
 {
 	ImGui::Begin("About", p_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 
-	
+
 	ImGui::Text("Sayonara Driver");
 	ImGui::Text("Made by AppleJuiceNerd");
 
