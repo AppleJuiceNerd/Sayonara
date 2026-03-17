@@ -34,6 +34,21 @@ void about_window()
 	ImGui::End();
 }
 
+void device_not_found_window()
+{
+	
+	ImGui::Begin("Device Not Found", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+
+	ImGui::Text("There was no SayoDevice found. Do you have one connected?");
+	
+	if (ImGui::Button("Retry"))
+	{
+		
+	}
+
+	ImGui::End();
+}
+
 void sn_window()
 {
 	// Setup device
@@ -58,10 +73,14 @@ void sn_window()
 	int btns = 3;
 
 	// Do not overwrite the starting value color
-	Nara::Color col = sayo.ReadLight(btn_number, 0);
-	color[0] = (col.r / 255.0f);
-	color[1] = (col.g / 255.0f);
-	color[2] = (col.b / 255.0f);
+	if (sayo.get_device() != NULL)\
+	{
+		Nara::Color col = sayo.ReadLight(btn_number, 0);
+		color[0] = (col.r / 255.0f);
+		color[1] = (col.g / 255.0f);
+		color[2] = (col.b / 255.0f);
+	}
+	
 
 	// Window flags
 	ImGuiWindowFlags window_flags = 
@@ -75,7 +94,7 @@ void sn_window()
 
 	// Start drawing the window
 	ImGui::SetNextItemAllowOverlap();
-	if (ImGui::Begin("SayoNara", NULL, window_flags))
+	if (ImGui::Begin("SayoNara", NULL, window_flags) && sayo.get_device() != NULL)
 	{
 		if (ImGui::BeginMenuBar())
 		{
@@ -124,6 +143,10 @@ void sn_window()
 		// Send color
 		// TODO: Pass Fn
 		sayo.SetLight(btn_number, 0, pkt_color);
+	}
+	else if (sayo.get_device() == NULL)
+	{
+		device_not_found_window();
 	}
 	
 	
