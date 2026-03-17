@@ -99,6 +99,14 @@ void sn_window()
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_NoBringToFrontOnFocus;
 
+	// Setup ImGui style
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.WindowRounding = 2;
+	style.ChildRounding = 2;
+	style.FrameRounding = 2;
+	style.PopupRounding = 2;
+	style.GrabRounding = 2;
+
 
 	// Start drawing the window
 	ImGui::SetNextItemAllowOverlap();
