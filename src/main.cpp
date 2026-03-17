@@ -14,22 +14,34 @@
 #include "utils.h"
 
 
-void about_window()
+void about_window(bool *p_open)
 {
 	
-	ImGui::Begin("About", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+	ImGui::Begin("About", p_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 
 	ImGui::Text("Sayonara Driver");
 	ImGui::Text("Made by AppleJuiceNerd");
 
-	if (ImGui::TreeNode("Tools and frameworks used"))
-	{
-		ImGui::BulletText("Dear ImGui");
-		ImGui::BulletText("Raylib");
-		ImGui::BulletText("rlImGui");
-		ImGui::BulletText("hidapi");
-		ImGui::TreePop();
-	}
+	ImGui::Separator();
+
+	ImGui::Text("Tools and frameworks used:");
+
+	ImGui::BulletText("");
+	ImGui::SameLine();
+	ImGui::TextLinkOpenURL("Dear ImGui", "https://github.com/ocornut/imgui");
+
+	ImGui::BulletText("");
+	ImGui::SameLine();
+	ImGui::TextLinkOpenURL("Raylib", "https://www.raylib.com/");
+
+	ImGui::BulletText("");
+	ImGui::SameLine();
+	ImGui::TextLinkOpenURL("rlImGui", "https://github.com/raylib-extras/rlImGui");
+
+	ImGui::BulletText("");
+	ImGui::SameLine();
+	ImGui::TextLinkOpenURL("hidapi", "https://github.com/libusb/hidapi");
+		
 	
 	ImGui::End();
 }
@@ -69,7 +81,7 @@ void sn_window()
 	int btns = 3;
 
 	// Do not overwrite the starting value color
-	if (sayo.get_device() != NULL)\
+	if (sayo.get_device() != NULL)
 	{
 		Nara::Color col = sayo.ReadLight(btn_number, 0);
 		color[0] = (col.r / 255.0f);
@@ -149,7 +161,7 @@ void sn_window()
 	ImGui::End();
 
 	// Draw the about window if it's open
-	if (about_window_open) { about_window(); }
+	if (about_window_open) { about_window(&about_window_open); }
 
 }
 
