@@ -40,11 +40,7 @@ void device_not_found_window()
 	ImGui::Begin("Device Not Found", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
 
 	ImGui::Text("There was no SayoDevice found. Do you have one connected?");
-	
-	if (ImGui::Button("Retry"))
-	{
-		
-	}
+	ImGui::Text("Make sure your SayoDevice is connected and restart the application.");
 
 	ImGui::End();
 }
