@@ -14,23 +14,46 @@
 #include "utils.h"
 
 
-void about_window()
+void about_window(bool *p_open)
 {
-	
-	ImGui::Begin("About", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+	ImGui::Begin("About", p_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
+
 
 	ImGui::Text("Sayonara Driver");
 	ImGui::Text("Made by AppleJuiceNerd");
 
-	if (ImGui::TreeNode("Tools and frameworks used"))
-	{
-		ImGui::BulletText("Dear ImGui");
-		ImGui::BulletText("Raylib");
-		ImGui::BulletText("rlImGui");
-		ImGui::BulletText("hidapi");
-		ImGui::TreePop();
-	}
+	ImGui::Separator();
+
+	ImGui::Text("Tools and frameworks used:");
+
+	ImGui::BulletText("");
+	ImGui::SameLine();
+	ImGui::TextLinkOpenURL("Dear ImGui", "https://github.com/ocornut/imgui");
+
+	ImGui::BulletText("");
+	ImGui::SameLine();
+	ImGui::TextLinkOpenURL("Raylib", "https://www.raylib.com/");
+
+	ImGui::BulletText("");
+	ImGui::SameLine();
+	ImGui::TextLinkOpenURL("rlImGui", "https://github.com/raylib-extras/rlImGui");
+
+	ImGui::BulletText("");
+	ImGui::SameLine();
+	ImGui::TextLinkOpenURL("hidapi", "https://github.com/libusb/hidapi");
+		
 	
+	ImGui::End();
+}
+
+void device_not_found_window()
+{
+	
+	ImGui::Begin("Device Not Found", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+
+	ImGui::Text("There was no SayoDevice found. Do you have one connected?");
+	ImGui::Text("Make sure your SayoDevice is connected and restart the application.");
+
 	ImGui::End();
 }
 
@@ -58,10 +81,14 @@ void sn_window()
 	int btns = 3;
 
 	// Do not overwrite the starting value color
-	Nara::Color col = sayo.ReadLight(btn_number, 0);
-	color[0] = (col.r / 255.0f);
-	color[1] = (col.g / 255.0f);
-	color[2] = (col.b / 255.0f);
+	if (sayo.get_device() != NULL)
+	{
+		Nara::Color col = sayo.ReadLight(btn_number, 0);
+		color[0] = (col.r / 255.0f);
+		color[1] = (col.g / 255.0f);
+		color[2] = (col.b / 255.0f);
+	}
+	
 
 	// Window flags
 	ImGuiWindowFlags window_flags = 
@@ -72,10 +99,18 @@ void sn_window()
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_NoBringToFrontOnFocus;
 
+	// Setup ImGui style
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.WindowRounding = 2;
+	style.ChildRounding = 2;
+	style.FrameRounding = 2;
+	style.PopupRounding = 2;
+	style.GrabRounding = 2;
+
 
 	// Start drawing the window
 	ImGui::SetNextItemAllowOverlap();
-	if (ImGui::Begin("SayoNara", NULL, window_flags))
+	if (ImGui::Begin("SayoNara", NULL, window_flags) && sayo.get_device() != NULL)
 	{
 		if (ImGui::BeginMenuBar())
 		{
@@ -125,12 +160,16 @@ void sn_window()
 		// TODO: Pass Fn
 		sayo.SetLight(btn_number, 0, pkt_color);
 	}
+	else if (sayo.get_device() == NULL)
+	{
+		device_not_found_window();
+	}
 	
 	
 	ImGui::End();
 
 	// Draw the about window if it's open
-	if (about_window_open) { about_window(); }
+	if (about_window_open) { about_window(&about_window_open); }
 
 }
 
