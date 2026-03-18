@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <hidapi/hidapi.h>
+#include <vector>
 
 
 // SayoDevice API Structures
@@ -19,7 +20,7 @@ struct API_LED_DATA
 #define CMD_0X11_SIZE 56
 
 // NOTE: All of these fields, barring led_fn, have unknown purposes.
-#pragma pack(1)
+// #pragma pack(1)
 struct API_CMD_0X11 {
 	uint8_t valid;
 	uint8_t led_class;
@@ -57,6 +58,57 @@ namespace Nara
 	// Lower level functions
 	namespace LL
 	{
+		// Represents a SayoDevice command package
+		// Acts as a base class
+		class Package
+		{
+		private:
+			uint8_t command; // Configured based on derived class
+
+		public:
+			uint8_t index;
+
+			// Assembles the package into a byte array for use in a Packet
+			void GetBytes(uint8_t *bytes);
+		};
+
+		class LightData
+		{
+		private:
+			uint8_t command = 0x11;
+
+		public:
+			uint8_t index;
+
+			// NOTE: All of these fields, barring led_fn, have unknown purposes.
+			uint8_t valid;
+			uint8_t led_class;
+			uint16_t reserve1;
+			uint16_t led_site_x;
+			uint16_t led_site_y;
+			uint16_t led_width;
+			uint16_t led_height;
+			uint16_t fillet_angle;
+			uint16_t reserve2;
+			struct API_LED_DATA led_fn[5]; // 5 fns
+
+			// Assembles the package into a byte array for use in a Packet
+			void GetBytes(uint8_t *bytes);
+		};
+
+		// Represents a SayoDevice HID packet
+		class Packet
+		{
+		public:
+			bool long_packet = true; // Determines if the packet length is 64 (false) or 1024 (true)
+			uint8_t echo = NARA_ECHO_CODE; // The echo code
+
+			std::vector<Package> packages; // The packages that make up the packet
+
+			// Assembles the packet into a byte array for sending
+			void GetBytes(uint8_t *bytes);
+		};
+
 		uint16_t checksum(uint8_t *data, int length);
 		void set_key_lights(hid_device *sayo, uint8_t key, struct API_CMD_0X11 req_data, uint8_t *result);
 		void read_key_lights(hid_device *sayo, uint8_t key, uint8_t *result);
