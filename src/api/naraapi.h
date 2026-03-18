@@ -69,17 +69,15 @@ namespace Nara
 			uint8_t index;
 
 			// Assembles the package into a byte array for use in a Packet
-			void GetBytes(uint8_t *bytes);
+			virtual void GetBytes(uint8_t *bytes);
 		};
 
-		class LightData
+		class LightData : public Package
 		{
 		private:
 			uint8_t command = 0x11;
 
 		public:
-			uint8_t index;
-
 			// NOTE: All of these fields, barring led_fn, have unknown purposes.
 			uint8_t valid;
 			uint8_t led_class;
@@ -93,7 +91,7 @@ namespace Nara
 			struct API_LED_DATA led_fn[5]; // 5 fns
 
 			// Assembles the package into a byte array for use in a Packet
-			void GetBytes(uint8_t *bytes);
+			void GetBytes(uint8_t *bytes) override;
 		};
 
 		// Represents a SayoDevice HID packet
