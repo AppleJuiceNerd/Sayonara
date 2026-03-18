@@ -82,7 +82,19 @@ jobs:
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     - uses: actions/upload-artifact@v4
+      if: runner.os == 'Linux'
       with:
         name: binary-${{ matrix.os }}-${{ matrix.c_compiler }}
-        path: build/sayonara*
+        path: build/sayonara
+        
+    - uses: actions/upload-artifact@v4
+      if: runner.os == 'macOS'
+      with:
+        name: binary-${{ matrix.os }}-${{ matrix.c_compiler }}
+        path: build/sayonara
+    
+    - uses: actions/upload-artifact@v4
+      with:
+        name: binary-${{ matrix.os }}-${{ matrix.c_compiler }}
+        path: build/**/sayonara.exe
 
