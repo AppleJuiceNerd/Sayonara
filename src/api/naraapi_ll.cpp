@@ -1,4 +1,5 @@
 #include "naraapi.h"
+#include <cstdint>
 #include <hidapi.h>
 #include <string.h>
 
@@ -66,4 +67,36 @@ void Nara::LL::read_key_lights(hid_device *sayo, uint8_t key, uint8_t *result)
 	
 
 	memcpy(result, &data, 1024);
+}
+
+
+// Package Building
+
+void Nara::LL::Package::GetBytes(uint8_t *bytes)
+{
+	; // Nothing should happen here
+}
+
+void Nara::LL::LightData::GetBytes(uint8_t *bytes)
+{
+	// Header
+	*(uint16_t*)(&bytes[0]) = 60; // The length of LightData will always be 60
+	bytes[2] = command;
+	bytes[3] = index;
+
+	// Data
+	bytes[4] = valid;
+	bytes[5] = led_class;
+	*(uint16_t*)(&bytes[6]) = reserve1;
+	*(uint16_t*)(&bytes[8]) = led_site_x;
+	*(uint16_t*)(&bytes[10]) = led_site_y;
+	*(uint16_t*)(&bytes[12]) = led_width;
+	*(uint16_t*)(&bytes[14]) = led_height;
+	*(uint16_t*)(&bytes[16]) = fillet_angle;
+	*(uint16_t*)(&bytes[18]) = reserve2;
+
+	for(int i = 0; i < 5; i++)
+	{
+		memcpy(&bytes[20 + (i * 8)], &led_fn[i], 8);
+	}
 }
