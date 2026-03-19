@@ -76,6 +76,17 @@ void Nara::LL::Package::GetBytes(uint8_t *bytes)
 	; // Nothing should happen here
 }
 
+uint16_t Nara::LL::Package::GetLength()
+{
+	return length;
+}
+
+uint16_t Nara::LL::LightData::GetLength()
+{
+	return length;
+}
+
+
 void Nara::LL::LightData::GetBytes(uint8_t *bytes)
 {
 	// Header
@@ -130,14 +141,13 @@ void Nara::LL::Packet::GetBytes(uint8_t *bytes)
 	{
 		// Assemble package bytes
 		packages[pkg]->GetBytes(buffer);
-		uint16_t s = packages[pkg]->length;
 
 		// Copy package to bytes at offset
-		memcpy(&bytes[offset], &buffer, s);
+		memcpy(&bytes[offset], &buffer, packages[pkg]->GetLength());
 
 		// Move to the next available space
 		// There should be four zeros after each package
-		offset += packages[pkg]->length + 4;
+		offset += packages[pkg]->GetLength() + 4;
 	}
 
 	*(uint16_t*)(&bytes[2]) = checksum(bytes, size);

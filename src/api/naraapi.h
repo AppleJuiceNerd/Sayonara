@@ -62,26 +62,23 @@ namespace Nara
 		// Acts as a base class
 		class Package
 		{
-		private:
+		protected:
 			uint8_t command; // Configured based on derived class
-			
+			uint16_t length; // Also configured based on derived class
 
 		public:
-			uint16_t length; // Also configured based on derived class
 			uint8_t index;
 
 			// Assembles the package into a byte array for use in a Packet
 			virtual void GetBytes(uint8_t *bytes);
+
+			// Gets the length of this Package
+			virtual uint16_t GetLength();
 		};
 
 		class LightData : public Package
 		{
-		private:
-			uint8_t command = 0x11;
-			
 		public:
-			uint16_t length = 56; // LightData packages are always 56 bytes long
-
 			// NOTE: All of these fields, barring led_fn, have unknown purposes.
 			uint8_t valid         = 0;
 			uint8_t led_class     = 0;
@@ -96,6 +93,15 @@ namespace Nara
 
 			// Assembles the package into a byte array for use in a Packet
 			void GetBytes(uint8_t *bytes) override;
+
+			uint16_t GetLength() override;
+
+			// Set private fields
+			LightData()
+			{
+				command = 0x11;
+				length = 56; // LightData packages are always 56 bytes long
+			}
 		};
 
 		// Represents a SayoDevice HID packet
