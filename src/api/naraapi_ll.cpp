@@ -71,10 +71,9 @@ void Nara::LL::read_key_lights(hid_device *sayo, uint8_t key, uint8_t *result)
 
 // Package Building
 
-void Nara::LL::Package::GetBytes(uint8_t *bytes)
-{
-	; // Nothing should happen here
-}
+void Nara::LL::Package::GetBytes(uint8_t *bytes) { /* Nothing should happen here */ }
+void Nara::LL::Package::LoadBytes(uint8_t *bytes) { /* Nothing should happen here */ }
+
 
 uint16_t Nara::LL::Package::GetLength()
 {
@@ -112,6 +111,29 @@ void Nara::LL::LightData::GetBytes(uint8_t *bytes)
 		memcpy(&bytes[20 + (i * 8)], &led_fn[i], 8);
 	}
 }
+
+void Nara::LL::LightData::LoadBytes(uint8_t *bytes)
+{
+	// Header
+	index = bytes[3];
+
+	// Data
+	valid = bytes[4];
+	led_class = bytes[5];
+	reserve1 = *(uint16_t*)(&bytes[6]);
+	led_site_x = *(uint16_t*)(&bytes[8]);
+	led_site_y = *(uint16_t*)(&bytes[10]);
+	led_width = *(uint16_t*)(&bytes[12]);
+	led_height = *(uint16_t*)(&bytes[14]);
+	fillet_angle = *(uint16_t*)(&bytes[16]);
+	reserve2 = *(uint16_t*)(&bytes[18]);
+
+	for(int i = 0; i < 5; i++)
+	{
+		memcpy(&led_fn[i], &bytes[20 + (i * 8)], 8);
+	}
+}
+
 
 void Nara::LL::Packet::GetBytes(uint8_t *bytes)
 {

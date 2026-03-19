@@ -72,6 +72,9 @@ namespace Nara
 			// Assembles the package into a byte array for use in a Packet
 			virtual void GetBytes(uint8_t *bytes);
 
+			// Reads a Package and loads corresponding fields
+			virtual void LoadBytes(uint8_t *bytes);
+
 			// Gets the length of this Package
 			virtual uint16_t GetLength();
 		};
@@ -93,6 +96,9 @@ namespace Nara
 
 			// Assembles the package into a byte array for use in a Packet
 			void GetBytes(uint8_t *bytes) override;
+
+			// Assembles the package into a byte array for use in a Packet
+			void LoadBytes(uint8_t *bytes) override;
 
 			uint16_t GetLength() override;
 
@@ -118,8 +124,7 @@ namespace Nara
 		};
 
 		
-		// A deserializer for SayoDevice communication packets
-
+		// A deserialization helper for SayoDevice communication packets
 		class Boxcutter
 		{
 		private:
