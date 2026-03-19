@@ -133,6 +133,11 @@ namespace Nara
 
 		public:
 			Boxcutter(uint8_t *bytes);
+			
+			// Takes the offset at index and deserializes it into type P
+			// NOTE: What happens when the returned type and actual package type are different is untested
+			template<typename P>
+			P Open(int index);
 		};
 		
 		uint16_t checksum(uint8_t *data, int length);

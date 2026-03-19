@@ -202,3 +202,20 @@ Nara::LL::Boxcutter::Boxcutter(uint8_t *bytes)
 		offset += *(uint16_t*)(&bytes[offset]);
 	}
 }
+
+template<typename P>
+P Nara::LL::Boxcutter::Open(int index)
+{
+	P pkg;
+	
+	switch (data[offsets[index] + 2])
+	{
+		case 0x11:
+			pkg = LightData().LoadBytes(&data[offsets[index]]);
+
+		default:
+			; // Unimplemented
+	}
+
+	return pkg;
+}
