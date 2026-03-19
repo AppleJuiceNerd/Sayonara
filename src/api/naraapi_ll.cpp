@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <hidapi.h>
 #include <string.h>
-#include <stdio.h>
 
 // NOTE: While it may not happen, this function may not work properly with odd-length arrays.
 uint16_t Nara::LL::checksum(uint8_t *data, int length)
@@ -139,4 +138,6 @@ void Nara::LL::Packet::GetBytes(uint8_t *bytes)
 		// There should be four zeros after each package
 		offset += pkg.length + 4;
 	}
+
+	*(uint16_t*)(&bytes[2]) = checksum(bytes, size);
 }
