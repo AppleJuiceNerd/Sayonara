@@ -105,7 +105,7 @@ namespace Nara
 			bool long_packet = true; // Determines if the packet length is 64 (false) or 1024 (true)
 			uint8_t echo = NARA_ECHO_CODE; // The echo code
 
-			std::vector<Package> packages; // The packages that make up the packet
+			std::vector<Package*> packages; // The packages that make up the packet
 
 			// Assembles the packet into a byte array for sending
 			void GetBytes(uint8_t *bytes);

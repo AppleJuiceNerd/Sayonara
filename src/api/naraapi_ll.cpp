@@ -126,17 +126,18 @@ void Nara::LL::Packet::GetBytes(uint8_t *bytes)
 	
 	uint8_t buffer[1024] = { 0 };
 
-	for(Package pkg: packages)
+	for(int pkg = 0; pkg < packages.size(); pkg++)
 	{
 		// Assemble package bytes
-		pkg.GetBytes(buffer);
+		packages[pkg]->GetBytes(buffer);
+		uint16_t s = packages[pkg]->length;
 
 		// Copy package to bytes at offset
-		memcpy(&bytes[offset], buffer, pkg.length);
+		memcpy(&bytes[offset], &buffer, s);
 
 		// Move to the next available space
 		// There should be four zeros after each package
-		offset += pkg.length + 4;
+		offset += packages[pkg]->length + 4;
 	}
 
 	*(uint16_t*)(&bytes[2]) = checksum(bytes, size);
