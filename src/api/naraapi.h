@@ -117,6 +117,19 @@ namespace Nara
 			void GetBytes(uint8_t *bytes);
 		};
 
+		
+		// A deserializer for SayoDevice communication packets
+
+		class Boxcutter
+		{
+		private:
+			uint8_t data[1024] = { 0 };
+			std::vector<uint16_t> offsets; 
+
+		public:
+			Boxcutter(uint8_t *bytes);
+		};
+		
 		uint16_t checksum(uint8_t *data, int length);
 		void set_key_lights(hid_device *sayo, uint8_t key, struct API_CMD_0X11 req_data, uint8_t *result);
 		void read_key_lights(hid_device *sayo, uint8_t key, uint8_t *result);

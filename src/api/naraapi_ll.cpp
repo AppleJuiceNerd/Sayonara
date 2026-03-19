@@ -81,11 +81,13 @@ uint16_t Nara::LL::Package::GetLength()
 	return length;
 }
 
+
+// LightData
+
 uint16_t Nara::LL::LightData::GetLength()
 {
 	return length;
 }
-
 
 void Nara::LL::LightData::GetBytes(uint8_t *bytes)
 {
@@ -151,4 +153,30 @@ void Nara::LL::Packet::GetBytes(uint8_t *bytes)
 	}
 
 	*(uint16_t*)(&bytes[2]) = checksum(bytes, size);
+}
+
+
+// Boxcutter
+
+Nara::LL::Boxcutter::Boxcutter(uint8_t *bytes)
+{
+	// Copy the passed bytes to data
+	if(bytes[0] == 0x21)
+	{
+		memcpy(data, bytes, 64);
+	} else
+	{
+		memcpy(data, bytes, 1024);
+	}
+
+	// Look for packages in data
+
+	int offset = 4;
+
+	// If the value at the 
+	while(bytes[offset] != 0)
+	{
+		offsets.push_back(offset);
+		offset += *(uint16_t*)(&bytes[offset]);
+	}
 }
