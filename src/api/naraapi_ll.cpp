@@ -203,19 +203,8 @@ Nara::LL::Boxcutter::Boxcutter(uint8_t *bytes)
 	}
 }
 
-template<typename P>
-P Nara::LL::Boxcutter::Open(int index)
+
+uint16_t Nara::LL::Boxcutter::GetOffset(int index)
 {
-	P pkg;
-	
-	switch (data[offsets[index] + 2])
-	{
-		case 0x11:
-			pkg = LightData().LoadBytes(&data[offsets[index]]);
-
-		default:
-			; // Unimplemented
-	}
-
-	return pkg;
+	return offsets[index];
 }
