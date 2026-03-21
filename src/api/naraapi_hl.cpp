@@ -50,10 +50,12 @@ void Nara::Sayo::SetLight(int key, int fn, Color color)
 
 	// Get current state of the lights
 	LL::read_key_lights(device, key, results);
+	
+	// Copy that state to a Package
+	LL::LightData lights;
+	lights.LoadBytes(&results[LL::Boxcutter(results).GetOffset(0)]);
 
-	// Copy that state to a struct
-	API_CMD_0X11 lights = { 0 };
-	memcpy(&lights, &results[8], sizeof(lights));
+	lights.index = key;
 
 	// Modify the color
 	lights.led_fn[fn].r = color.r;
@@ -73,9 +75,9 @@ Nara::Color Nara::Sayo::ReadLight(int key, int fn)
 	// Get current state of the lights
 	LL::read_key_lights(device, key, results);
 
-	// Copy that state to a struct
-	API_CMD_0X11 lights = { 0 };
-	memcpy(&lights, &results[8], sizeof(lights));
+	// Copy that state to a Package
+	LL::LightData lights;
+	lights.LoadBytes(&results[LL::Boxcutter(results).GetOffset(0)]);
 
 	// Return the color
 	return {

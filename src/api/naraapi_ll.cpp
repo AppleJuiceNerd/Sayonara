@@ -10,62 +10,57 @@ uint16_t Nara::LL::checksum(uint8_t *data, int length)
 	for(int b = 0; b < length; b+=2)
 	{
 		sum += ( data[b+1] << 8 ) + data[b];
-		// printf("off %d: %d\n", b, sum);
 	}
 
 	return sum;
 }
 
-void Nara::LL::set_key_lights(hid_device *sayo, uint8_t key, struct API_CMD_0X11 req_data, uint8_t *result)
+void Nara::LL::set_key_lights(hid_device *sayo, uint8_t key, LightData req_data, uint8_t *result)
 {
-	struct PKT_HEADER pkt = { 0x22, NARA_ECHO_CODE, 0 };
-	struct CMD_HEADER cmd = { 60, 0x11, key };
 	uint8_t data[1024] = { 0 };
 
-	memcpy(&data, &pkt, sizeof(pkt));
-	memcpy(&data[4], &cmd, sizeof(cmd));
-	memcpy(&data[8], &req_data, sizeof(req_data));
+	Packet pkt;
 
-	// pkt.checksum = __builtin_bswap16(checksum(data, 1000));
-	pkt.checksum = checksum(data, 1000);
-	
-	memcpy(&data, &pkt, sizeof(pkt));
+	pkt.packages.push_back(&req_data);
+
+	pkt.GetBytes(data);
 
 	hid_write(sayo, data, 1024);
-	
 
 	// NOTE: May be prone to infinite loops
 	do {
 		hid_read(sayo, data, 1024);
-	} while (data[1] != NARA_ECHO_CODE);
+	} while (data[1] != pkt.echo);
 
-	memcpy(&data, &result, 1024);
+	if (result != NULL)
+	{
+		memcpy(result, &data, 1024);
+	}
 }
 
 void Nara::LL::read_key_lights(hid_device *sayo, uint8_t key, uint8_t *result)
 {
-	struct PKT_HEADER pkt = { 0x22, NARA_ECHO_CODE, 0 };
-	struct CMD_HEADER cmd = { 0x04, 0x11, key };
 	uint8_t data[1024] = { 0 };
 
-	memcpy(&data, &pkt, sizeof(pkt));
-	memcpy(&data[4], &cmd, sizeof(cmd));
+	Packet pkt;
+	LightData lights;
 
-	// pkt.checksum = __builtin_bswap16(checksum(data, 1000));
-	pkt.checksum = checksum(data, 1000);
-	
-	memcpy(&data, &pkt, sizeof(pkt));
-	
+	pkt.packages.push_back(&lights);
+
+	pkt.GetBytes(data);
+	data[4] = 4; // FIXME: No package read functionality; this breaks everything
 
 	hid_write(sayo, data, 1024);
 
 	// NOTE: May be prone to infinite loops
 	do {
 		hid_read(sayo, data, 1024);
-	} while (data[1] != NARA_ECHO_CODE);
+	} while (data[1] != pkt.echo);
 	
-
-	memcpy(result, &data, 1024);
+	if (result != NULL)
+	{
+		memcpy(result, &data, 1024);
+	}
 }
 
 
