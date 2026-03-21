@@ -94,19 +94,28 @@ namespace Nara
 			uint16_t reserve2     = 0;
 			struct API_LED_DATA led_fn[5] = { 0 }; // 5 fns
 
+
 			// Assembles the package into a byte array for use in a Packet
 			void GetBytes(uint8_t *bytes) override;
 
 			// Assembles the package into a byte array for use in a Packet
 			void LoadBytes(uint8_t *bytes) override;
+			
 
 			uint16_t GetLength() override;
 
 			// Set private fields
-			LightData()
+			LightData(bool read = false)
 			{
 				command = 0x11;
-				length = 56; // LightData packages are always 56 bytes long
+				if(!read)
+				{
+					length = 56; // LightData packages are always 56 bytes long
+				}
+				else 
+				{
+					length = 56;
+				}
 			}
 		};
 

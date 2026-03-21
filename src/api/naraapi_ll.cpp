@@ -43,12 +43,11 @@ void Nara::LL::read_key_lights(hid_device *sayo, uint8_t key, uint8_t *result)
 	uint8_t data[1024] = { 0 };
 
 	Packet pkt;
-	LightData lights;
+	LightData lights(true);
 
 	pkt.packages.push_back(&lights);
 
 	pkt.GetBytes(data);
-	data[4] = 4; // FIXME: No package read functionality; this breaks everything
 
 	hid_write(sayo, data, 1024);
 
@@ -89,6 +88,11 @@ void Nara::LL::LightData::GetBytes(uint8_t *bytes)
 	*(uint16_t*)(&bytes[0]) = length + 4;
 	bytes[2] = command;
 	bytes[3] = index;
+
+	if (length == 0)
+	{
+		return;
+	}
 
 	// Data
 	bytes[4] = valid;
