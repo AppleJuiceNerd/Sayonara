@@ -1,4 +1,5 @@
 // C/C++ stuff
+#include <cstdint>
 #include <cstdio>
 #include <format>
 
@@ -55,6 +56,51 @@ void device_not_found_window()
 	ImGui::End();
 }
 
+void color_config(Nara::Sayo *sayo)
+{
+	// The color to be sent to the device
+	static float color[3] = { 0 };
+
+	// The light to send the color to
+	static int btn_number = 0;
+
+	// The fn layer to send the color to
+	static int fn = 0;
+
+	// The number of buttons [to assume] that are on the device
+	int btns = 3;
+
+	// Color Picker
+	ImGui::SetNextItemWidth(300);
+	ImGui::ColorPicker3("Light Color", color, 0);
+
+	// Light picker
+	for (int i = 0; i < btns; i++)
+	{
+		if (ImGui::RadioButton(std::format("light {}", i + 1).c_str(), &btn_number, i))
+		{
+			// Click a button, get that button's color
+			// TODO: Pass Fn
+			Nara::Color col = sayo->ReadLight(btn_number, fn);
+			color[0] = (col.r / 255.0f);
+			color[1] = (col.g / 255.0f);
+			color[2] = (col.b / 255.0f);
+		}
+		ImGui::SameLine();
+	}
+
+	ImGui::NewLine();
+
+	if (ImGui::Button("Send", ImVec2(80, 50)))
+	{
+		sayo->SetLight(btn_number, fn, {
+			(uint8_t)(color[0] * 255),
+			(uint8_t)(color[1] * 255),
+			(uint8_t)(color[2] * 255)
+		});
+	}
+}
+
 void sn_window()
 {
 	// Setup device
@@ -68,26 +114,7 @@ void sn_window()
 
 	// Specifies whether the about window is open or not
 	static bool about_window_open = false;
-
-	// The color to be sent to the device
-	static float color[3] = { 0 };
-
-	// The light to send the color to
-	static int btn_number = 0;
-
-	// The number of buttons [to assume] that are on the device
-	int btns = 3;
-
-	// Do not overwrite the starting value color
-	if (sayo.get_device() != NULL)
-	{
-		Nara::Color col = sayo.ReadLight(btn_number, 0);
-		color[0] = (col.r / 255.0f);
-		color[1] = (col.g / 255.0f);
-		color[2] = (col.b / 255.0f);
-	}
 	
-
 	// Window flags
 	ImGuiWindowFlags window_flags = 
 		ImGuiWindowFlags_NoDecoration |
@@ -121,43 +148,9 @@ void sn_window()
 		}
 		ImGui::EndMenuBar();
 
-		// Color Picker
-		ImGui::SetNextItemWidth(300);
-		ImGui::ColorPicker3("Light Color", color, 0);
-		
-		// Light picker
-		for (int i = 0; i < btns; i++)
-		{
-			if (ImGui::RadioButton(std::format("light {}", i).c_str(), &btn_number, i))
-			{
-				// Click a button, get that button's color
-				// TODO: Pass Fn
-				Nara::Color col = sayo.ReadLight(btn_number, 0);
-				color[0] = (col.r / 255.0f);
-				color[1] = (col.g / 255.0f);
-				color[2] = (col.b / 255.0f);
-			}
-
-			ImGui::SameLine();
-			
-		}
-
-		ImGui::NewLine();
-		
-		
-		// send the color to the device!
-		// NOTE: a color is being sent every frame. Maybe it shouldn't do this?
-		// setup a color
-		Nara::Color pkt_color = {
-			(unsigned char)(color[0] * 255.0f),
-			(unsigned char)(color[1] * 255.0f),
-			(unsigned char)(color[2] * 255.0f)
-		};
-
-		// Send color
-		// TODO: Pass Fn
-		sayo.SetLight(btn_number, 0, pkt_color);
+		color_config(&sayo);
 	}
+
 	else if (sayo.get_device() == NULL)
 	{
 		device_not_found_window();
