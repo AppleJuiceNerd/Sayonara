@@ -38,9 +38,9 @@ include_directories(submodules/rlImGui)
 include_directories(submodules/imgui)
 include_directories(submodules/imgui/backends)
 
-# Nara (subdirectory, soon-to-be submodule)
-add_subdirectory(src/api)
-include_directories(src/api)
+# Nara (submodule)
+add_subdirectory(submodules/Nara)
+include_directories(submodules/Nara)
 
 # Build and link
 add_executable(${PROJECT_NAME} 

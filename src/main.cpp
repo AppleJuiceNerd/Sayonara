@@ -9,8 +9,10 @@
 #include "imgui.h"
 #include "rlImGui.h"
 
+// Nara
+#include <naraapi.h>
+
 // Sayonara stuff
-#include "api/naraapi.h"
 #include "utils.h"
 
 
@@ -206,6 +208,5 @@ int main()
 	// Clean up
 	Nara::Exit();
 	rlImGuiShutdown();
-
 	return 0;
 }
