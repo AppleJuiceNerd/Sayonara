@@ -114,7 +114,7 @@ namespace Nara
 				}
 				else 
 				{
-					length = 56;
+					length = 0;
 				}
 			}
 		};

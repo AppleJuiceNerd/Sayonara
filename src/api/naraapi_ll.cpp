@@ -45,6 +45,8 @@ void Nara::LL::read_key_lights(hid_device *sayo, uint8_t key, uint8_t *result)
 	Packet pkt;
 	LightData lights(true);
 
+	lights.index = key;
+
 	pkt.packages.push_back(&lights);
 
 	pkt.GetBytes(data);
@@ -144,7 +146,7 @@ void Nara::LL::Packet::GetBytes(uint8_t *bytes)
 		packages[pkg]->GetBytes(buffer);
 		
 		// Copy package to bytes at offset
-		memcpy(&bytes[offset], &buffer, packages[pkg]->GetLength());
+		memcpy(&bytes[offset], &buffer, packages[pkg]->GetLength() + 4);
 
 		// Move to the next available space
 		// There should be four zeros after each package
@@ -195,10 +197,10 @@ Nara::LL::Boxcutter::Boxcutter(uint8_t *bytes)
 	int offset = 4;
 
 	// If the value at the 
-	while(bytes[offset] != 0)
+	while(data[offset] != 0)
 	{
 		offsets.push_back(offset);
-		offset += *(uint16_t*)(&bytes[offset]);
+		offset += *(uint16_t*)(&data[offset]);
 	}
 }
 
