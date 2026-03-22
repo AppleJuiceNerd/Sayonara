@@ -30,26 +30,23 @@ endif()
 # rlImGui (submodule)
 include_directories(submodules/rlImGui)
 
-# hidapi (unsure)
-add_subdirectory(submodules/hidapi)
-include_directories(submodules/hidapi)
-
+# hidapi (submodule)
+# add_subdirectory(submodules/hidapi)
+# include_directories(submodules/hidapi)
 
 # DearImGui (submodule)
 include_directories(submodules/imgui)
 include_directories(submodules/imgui/backends)
 
-
+# Nara (subdirectory, soon-to-be submodule)
+add_subdirectory(src/api)
+include_directories(src/api)
 
 # Build and link
 add_executable(${PROJECT_NAME} 
 	# Application
   src/main.cpp
   src/utils.cpp
-
-  # Nara API
-  src/api/naraapi_hl.cpp
-  src/api/naraapi_ll.cpp
 
   # External Libraries
   submodules/imgui/imgui.cpp
@@ -61,8 +58,8 @@ add_executable(${PROJECT_NAME}
 )
 
 
-target_link_libraries(${PROJECT_NAME} PRIVATE hidapi::hidapi)
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+target_link_libraries(${PROJECT_NAME} PRIVATE nara)
 
 
 # Checks if OSX and links appropriate frameworks (only required on MacOS)

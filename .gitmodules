@@ -5,5 +5,5 @@
 	path = submodules/rlImGui
 	url = https://github.com/raylib-extras/rlImGui.git
 [submodule "submodules/hidapi"]
-	path = submodules/hidapi
+	path = src/api/submodules/hidapi
 	url = https://github.com/libusb/hidapi.git
