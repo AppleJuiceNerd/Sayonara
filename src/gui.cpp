@@ -114,6 +114,12 @@ void sn_window()
 
 	// Specifies whether the about window is open or not
 	static bool about_window_open = false;
+
+	// Which sidebar window is selected
+	static int sidebar_window = 0;
+
+	ImGuiChildFlags sidebar_flags = 
+		ImGuiChildFlags_Borders;
 	
 	// Window flags
 	ImGuiWindowFlags window_flags = 
@@ -148,7 +154,22 @@ void sn_window()
 		}
 		ImGui::EndMenuBar();
 
+
+
+		ImGui::BeginChild("Sidebar", ImVec2(ImGui::GetContentRegionAvail().x * 0.1f, ImGui::GetContentRegionAvail().y), sidebar_flags);
+
+		ImGui::RadioButton("Lights", &sidebar_window, 0);
+		ImGui::RadioButton("Keybinding", &sidebar_window, 1);
+
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginGroup();
 		color_config(&sayo);
+		ImGui::EndGroup();
+
+
 	}
 
 	else if (sayo.get_device() == NULL)
