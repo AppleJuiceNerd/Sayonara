@@ -5,5 +5,5 @@ build
 # Should I be tracking this?
 CMakeCache.txt
 
-# Disable workflows for now
-.github
+# These just appear, make them go away
+imgui.ini
