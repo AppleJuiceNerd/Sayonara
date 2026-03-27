@@ -172,10 +172,27 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 	}
 }
 
+void color_picker(Nara::Color *in_color)
+{
+	static float color[3] = { 0 };
+	
+	color[0] = (in_color->r / 255.0f);
+	color[1] = (in_color->g / 255.0f);
+	color[2] = (in_color->b / 255.0f);
+
+	ImGui::SetNextItemWidth(300);
+	ImGui::ColorPicker3("Light Color", color, 0);
+
+	in_color->r = (uint8_t)(color[0] * 255);
+	in_color->g = (uint8_t)(color[1] * 255);
+	in_color->b = (uint8_t)(color[2] * 255);
+}
+
+
 void color_config(Nara::Sayo *sayo)
 {
 	// The color to be sent to the device
-	static float color[3] = { 0 };
+	static Nara::Color color = { 0 };
 
 	// The light to send the color to
 	static int btn_number = 0;
@@ -187,8 +204,7 @@ void color_config(Nara::Sayo *sayo)
 	int btns = 3;
 
 	// Color Picker
-	ImGui::SetNextItemWidth(300);
-	ImGui::ColorPicker3("Light Color", color, 0);
+	color_picker(&color);
 
 	// Light picker
 	for (int i = 0; i < btns; i++)
@@ -198,9 +214,6 @@ void color_config(Nara::Sayo *sayo)
 			// Click a button, get that button's color
 			// TODO: Pass Fn
 			Nara::Color col = sayo->ReadLight(btn_number, fn);
-			color[0] = (col.r / 255.0f);
-			color[1] = (col.g / 255.0f);
-			color[2] = (col.b / 255.0f);
 		}
 		ImGui::SameLine();
 	}
@@ -213,11 +226,7 @@ void color_config(Nara::Sayo *sayo)
 
 	if (ImGui::Button("Send", ImVec2(80, 50)))
 	{
-		sayo->SetLight(btn_number, fn, {
-			(uint8_t)(color[0] * 255),
-			(uint8_t)(color[1] * 255),
-			(uint8_t)(color[2] * 255)
-		});
+		sayo->SetLight(btn_number, fn, {color});
 	}
 }
 

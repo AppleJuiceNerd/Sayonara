@@ -10,6 +10,9 @@ void sn_window();
 // The main color config interface function
 void color_config(Nara::Sayo *sayo);
 
+// The color picker widget
+void color_picker(Nara::Color *in_color);
+
 // The led mode switcher element
 void led_mode_switcher(Nara::Sayo *sayo, int key, int fn);
 
