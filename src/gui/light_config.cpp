@@ -212,8 +212,7 @@ void color_config(Nara::Sayo *sayo)
 		if (ImGui::RadioButton(std::format("light {}", i + 1).c_str(), &btn_number, i))
 		{
 			// Click a button, get that button's color
-			// TODO: Pass Fn
-			Nara::Color col = sayo->ReadLight(btn_number, fn);
+			color = sayo->ReadLight(btn_number, fn);
 		}
 		ImGui::SameLine();
 	}
