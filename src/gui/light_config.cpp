@@ -34,6 +34,67 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 	// The last selected item
 	static int last_selected = 0;
 
+	// The last key passed to this function
+	static int last_key = -1; // -1 to force a reread
+
+	// The last fn layer passed to this function
+	static int last_fn = -1; // -1 to force a reread
+
+
+	// If the key or fn passed isn't the same as the one that was last passed
+	if ((last_key != key) || (last_fn != fn))
+	{
+		last_key = key;
+		last_fn = fn;
+
+		switch (sayo->ReadLightMode(key, fn))
+		{
+			case Nara::STATIC:
+				selected = 0;
+				break;
+			
+			case Nara::INDICATOR:
+				selected = 1;
+				break;
+			
+			case Nara::BREATHING:
+				selected = 2;
+				break;
+			
+			case Nara::BREATHING_ONCE:
+				selected = 3;
+				break;
+			
+			case Nara::WAVE:
+				selected = 4;
+				break;
+			
+			case Nara::SWITCH:
+				selected = 5;
+				break;
+			
+			case Nara::SWITCH_ONCE:
+				selected = 6;
+				break;
+			
+			case Nara::BLINK:
+				selected = 7;
+				break;
+			
+			case Nara::BLINK_ONCE:
+				selected = 8;
+				break;
+			
+			case Nara::FADE_IN:
+				selected = 9;
+				break;
+			
+			case Nara::FADE_OUT:
+				selected = 10;
+				break;
+		}
+	}
+
 
 	// Combo element
 	if (ImGui::BeginCombo("Light Mode", items[selected]))
