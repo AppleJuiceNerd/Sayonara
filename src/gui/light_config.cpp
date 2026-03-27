@@ -125,47 +125,47 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 
 		switch (selected)
 		{
-			case 1:
+			case 0:
 				sayo->SetLightMode(key, fn, Nara::STATIC);
 				break;
 
-			case 2:
+			case 1:
 				sayo->SetLightMode(key, fn, Nara::INDICATOR);
 				break;
 			
-			case 3:
+			case 2:
 				sayo->SetLightMode(key, fn, Nara::BREATHING);
 				break;
 			
-			case 4:
+			case 3:
 				sayo->SetLightMode(key, fn, Nara::BREATHING_ONCE);
 				break;
 			
-			case 5:
+			case 4:
 				sayo->SetLightMode(key, fn, Nara::WAVE);
 				break;
 			
-			case 6:
+			case 5:
 				sayo->SetLightMode(key, fn, Nara::SWITCH);
 				break;
 			
-			case 7:
+			case 6:
 				sayo->SetLightMode(key, fn, Nara::SWITCH_ONCE);
 				break;
 			
-			case 8:
+			case 7:
 				sayo->SetLightMode(key, fn, Nara::BLINK);
 				break;
 			
-			case 9:
+			case 8:
 				sayo->SetLightMode(key, fn, Nara::BLINK_ONCE);
 				break;
 			
-			case 10:
+			case 9:
 				sayo->SetLightMode(key, fn, Nara::FADE_OUT);
 				break;
 			
-			case 11:
+			case 10:
 				sayo->SetLightMode(key, fn, Nara::FADE_IN);
 				break;
 		}
