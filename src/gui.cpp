@@ -57,7 +57,7 @@ void device_not_found_window()
 }
 
 
-void led_mode_switcher(Nara::Sayo *sayo)
+void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 {
 	// All possible options
 	const char* items[] = {
@@ -101,6 +101,49 @@ void led_mode_switcher(Nara::Sayo *sayo)
 			}
 		}
 		ImGui::EndCombo();
+
+
+		// Evaluate selected element and send the corresponding configuration command when changed
+		if (selected != last_selected)
+		{
+			last_selected = selected;
+
+			switch (selected)
+			{
+				case 1:
+					sayo->SetLightMode(key, fn, Nara::STATIC);
+
+				case 2:
+					sayo->SetLightMode(key, fn, Nara::INDICATOR);
+				
+				case 3:
+					sayo->SetLightMode(key, fn, Nara::BREATHING);
+				
+				case 4:
+					sayo->SetLightMode(key, fn, Nara::BREATHING_ONCE);
+				
+				case 5:
+					sayo->SetLightMode(key, fn, Nara::WAVE);
+				
+				case 6:
+					sayo->SetLightMode(key, fn, Nara::SWITCH);
+				
+				case 7:
+					sayo->SetLightMode(key, fn, Nara::SWITCH_ONCE);
+				
+				case 8:
+					sayo->SetLightMode(key, fn, Nara::BLINK);
+				
+				case 9:
+					sayo->SetLightMode(key, fn, Nara::BLINK_ONCE);
+				
+				case 10:
+					sayo->SetLightMode(key, fn, Nara::FADE_OUT);
+				
+				case 11:
+					sayo->SetLightMode(key, fn, Nara::FADE_IN);
+			}
+		}
 	}
 }
 
@@ -139,7 +182,7 @@ void color_config(Nara::Sayo *sayo)
 
 	ImGui::NewLine();
 
-	led_mode_switcher(sayo);
+	led_mode_switcher(sayo, btn_number, fn);
 
 	ImGui::NewLine();
 
