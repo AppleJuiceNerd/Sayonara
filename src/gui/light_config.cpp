@@ -36,7 +36,7 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 
 
 	// Combo element
-	if (ImGui::BeginCombo("Light Mode1", items[selected]))
+	if (ImGui::BeginCombo("Light Mode", items[selected]))
 	{
 		for (int i = 0; i < IM_COUNTOF(items); i++)
 		{
