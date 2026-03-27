@@ -56,6 +56,54 @@ void device_not_found_window()
 	ImGui::End();
 }
 
+
+void led_mode_switcher(Nara::Sayo *sayo)
+{
+	// All possible options
+	const char* items[] = {
+		"Static",
+		"Indicator",
+		"Breathing",
+		"Breathing Once",
+		"Wave",
+		"Switch",
+		"Switch Once",
+		"Blink",
+		"Blink Once",
+		"Fade Out",
+		"Fade In"
+	};
+
+	// The currently selected item
+	static int selected = 0;
+
+	// The last selected item
+	static int last_selected = 0;
+
+
+	// Combo element
+	if (ImGui::BeginCombo("Light Mode1", items[selected]))
+	{
+		for (int i = 0; i < IM_COUNTOF(items); i++)
+		{
+			const bool is_selected = (selected == i);
+			
+			// If the current item is selected, set the selected item index to the current item's
+			if (ImGui::Selectable(items[i], is_selected)) 
+			{
+				selected = i;
+			}
+
+			// Set initial focus when opening the combo
+			if (selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+}
+
 void color_config(Nara::Sayo *sayo)
 {
 	// The color to be sent to the device
@@ -88,6 +136,10 @@ void color_config(Nara::Sayo *sayo)
 		}
 		ImGui::SameLine();
 	}
+
+	ImGui::NewLine();
+
+	led_mode_switcher(sayo);
 
 	ImGui::NewLine();
 
