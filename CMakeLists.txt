@@ -46,7 +46,10 @@ include_directories(submodules/Nara)
 add_executable(${PROJECT_NAME} 
 	# Application
   src/main.cpp
-  src/gui.cpp
+  src/gui/main_window.cpp
+  src/gui/light_config.cpp
+  src/gui/misc.cpp
+
   src/utils.cpp
 
   # External Libraries

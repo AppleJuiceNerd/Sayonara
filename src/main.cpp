@@ -8,7 +8,7 @@
 #include <naraapi.h>
 
 // Sayonara stuff
-#include "gui.h"
+#include "gui/gui.h"
 
 
 int main()
