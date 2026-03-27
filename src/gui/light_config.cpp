@@ -188,6 +188,22 @@ void color_picker(Nara::Color *in_color)
 	in_color->b = (uint8_t)(color[2] * 255);
 }
 
+void led_picker(Nara::Sayo *sayo, Nara::Color *color, int buttons, int *key, int fn)
+{
+	for (int i = 0; i < buttons; i++)
+	{
+		if (ImGui::RadioButton(std::format("light {}", i + 1).c_str(), key, i))
+		{
+			// Click a button, get that button's color
+			*color = sayo->ReadLight(*key, fn);
+		}
+		ImGui::SameLine();
+	}
+
+	// The loop will always end with SameLine();, this fixes that
+	ImGui::NewLine();
+}
+
 
 void color_config(Nara::Sayo *sayo)
 {
@@ -207,18 +223,8 @@ void color_config(Nara::Sayo *sayo)
 	color_picker(&color);
 
 	// Light picker
-	for (int i = 0; i < btns; i++)
-	{
-		if (ImGui::RadioButton(std::format("light {}", i + 1).c_str(), &btn_number, i))
-		{
-			// Click a button, get that button's color
-			color = sayo->ReadLight(btn_number, fn);
-		}
-		ImGui::SameLine();
-	}
-
-	ImGui::NewLine();
-
+	led_picker(sayo, &color, btns, &btn_number, fn);
+	
 	led_mode_switcher(sayo, btn_number, fn);
 
 	ImGui::NewLine();
