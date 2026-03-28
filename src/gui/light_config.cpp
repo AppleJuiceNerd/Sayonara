@@ -208,9 +208,7 @@ void color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 		selected = sayo->ReadColorMode(key, fn);
 	}
 
-
 	array_combo("Color Mode", items, &selected, IM_COUNTOF(items));
-
 
 	// Evaluate selected element and send the corresponding configuration command when changed
 	if (selected != last_selected)
