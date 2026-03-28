@@ -269,6 +269,56 @@ void color_table_switcher(Nara::Sayo *sayo, int key, int fn)
 	}
 }
 
+void trigger_event_switcher(Nara::Sayo *sayo, int key, int fn)
+{
+	// All possible options
+	// NOTE: This list should probably be generated instead
+	const char* items[] = {
+		"None",
+		"Press Light Up",
+		"Release Light Up",
+		"Press Fade In",
+		"Release Fade In",
+		"Press Next Color",
+		"Release Next Color",
+		"Script_Running",
+		"Script_Stop"
+	};
+
+	// The currently selected item
+	static int selected = 0;
+
+	// The last selected item
+	static int last_selected = 0;
+
+	// The last key passed to this function
+	static int last_key = -1; // -1 to force a reread
+
+	// The last fn layer passed to this function
+	static int last_fn = -1; // -1 to force a reread
+
+
+	// If the key or fn passed isn't the same as the one that was last passed
+	if ((last_key != key) || (last_fn != fn))
+	{
+		last_key = key;
+		last_fn = fn;
+
+
+		selected = sayo->GetLightTriggerEvent(key, fn);
+	}
+
+	array_combo("Trigger Event", items, &selected, IM_COUNTOF(items));
+
+	// Evaluate selected element and send the corresponding configuration command when changed
+	if (selected != last_selected)
+	{
+		last_selected = selected;
+
+		sayo->SetLightTriggerEvent(key, fn, selected);
+	}
+}
+
 void color_picker(Nara::Color *in_color)
 {
 	static float color[3] = { 0 };
@@ -326,6 +376,7 @@ void color_config(Nara::Sayo *sayo)
 	led_mode_switcher(sayo, btn_number, fn);
 	color_mode_switcher(sayo, btn_number, fn);
 	color_table_switcher(sayo, btn_number, fn);
+	trigger_event_switcher(sayo, btn_number, fn);
 
 	ImGui::NewLine();
 
