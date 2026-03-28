@@ -120,7 +120,6 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 		}
 	}
 
-
 	array_combo("Light Mode", items, &selected, IM_COUNTOF(items));
 
 	// Evaluate selected element and send the corresponding configuration command when changed
@@ -206,24 +205,7 @@ void color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 		last_key = key;
 		last_fn = fn;
 
-		switch (sayo->ReadColorMode(key, fn))
-		{
-			case Nara::STATIC_COLOR:
-				selected = 0;
-				break;
-			
-			case Nara::LOOP_COLOR_TABLES:
-				selected = 1;
-				break;
-			
-			case Nara::RANDOM_COLOR_TABLES:
-				selected = 2;
-				break;
-			
-			case Nara::RANDOM_COLOR:
-				selected = 3;
-				break;
-		}
+		selected = sayo->ReadColorMode(key, fn);
 	}
 
 
@@ -235,24 +217,7 @@ void color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 	{
 		last_selected = selected;
 
-		switch (selected)
-		{
-			case 0:
-				sayo->SetColorMode(key, fn, Nara::STATIC_COLOR);
-				break;
-
-			case 1:
-				sayo->SetColorMode(key, fn, Nara::LOOP_COLOR_TABLES);
-				break;
-			
-			case 2:
-				sayo->SetColorMode(key, fn, Nara::RANDOM_COLOR_TABLES);
-				break;
-			
-			case 3:
-				sayo->SetColorMode(key, fn, Nara::RANDOM_COLOR);
-				break;
-		}
+		sayo->SetColorMode(key, fn, (Nara::LED_ColorModes) selected);
 	}
 }
 
@@ -291,9 +256,7 @@ void color_table_switcher(Nara::Sayo *sayo, int key, int fn)
 		selected = sayo->GetLightColorTable(key, fn);
 	}
 
-
 	array_combo("Color Table", items, &selected, IM_COUNTOF(items));
-
 
 	// Evaluate selected element and send the corresponding configuration command when changed
 	if (selected != last_selected)
