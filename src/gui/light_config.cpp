@@ -11,9 +11,13 @@
 #include "gui.h"
 
 
+#define WIDGET_WIDTH ( ImGui::GetContentRegionAvail().x * 0.3f )
+
+
 void array_combo(const char *label, const char **items, int *selected, int size)
 {
 	// Combo element
+	ImGui::SetNextItemWidth(WIDGET_WIDTH);
 	if (ImGui::BeginCombo(label, items[*selected]))
 	{
 		for (int i = 0; i < size; i++)
@@ -273,7 +277,7 @@ void color_picker(Nara::Color *in_color)
 	color[1] = (in_color->g / 255.0f);
 	color[2] = (in_color->b / 255.0f);
 
-	ImGui::SetNextItemWidth(300);
+	ImGui::SetNextItemWidth(WIDGET_WIDTH);
 	ImGui::ColorPicker3("Light Color", color, 0);
 
 	in_color->r = (uint8_t)(color[0] * 255);
