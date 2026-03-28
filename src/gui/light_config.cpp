@@ -40,7 +40,7 @@ void array_combo(const char *label, const char **items, int *selected, int size)
 	}
 }
 
-void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
+Nara::LED_Modes led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 {
 	// All possible options
 	const char* items[] = {
@@ -178,9 +178,11 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 				break;
 		}
 	}
+
+	return sayo->ReadLightMode(key, fn);
 }
 
-void color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
+Nara::LED_ColorModes color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 {
 	// All possible options
 	const char* items[] = {
@@ -221,9 +223,11 @@ void color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 
 		sayo->SetColorMode(key, fn, (Nara::LED_ColorModes) selected);
 	}
+
+	return sayo->ReadColorMode(key, fn);
 }
 
-void color_table_switcher(Nara::Sayo *sayo, int key, int fn)
+int color_table_switcher(Nara::Sayo *sayo, int key, int fn)
 {
 	// All possible options
 	// NOTE: This list should probably be generated instead
@@ -267,9 +271,11 @@ void color_table_switcher(Nara::Sayo *sayo, int key, int fn)
 
 		sayo->SetLightColorTable(key, fn, selected);
 	}
+
+	return sayo->GetLightColorTable(key, fn);
 }
 
-void trigger_event_switcher(Nara::Sayo *sayo, int key, int fn)
+int trigger_event_switcher(Nara::Sayo *sayo, int key, int fn)
 {
 	// All possible options
 	// NOTE: This list should probably be generated instead
@@ -317,6 +323,9 @@ void trigger_event_switcher(Nara::Sayo *sayo, int key, int fn)
 
 		sayo->SetLightTriggerEvent(key, fn, selected);
 	}
+
+	return sayo->GetLightTriggerEvent(key, fn);
+}
 }
 
 void color_picker(Nara::Color *in_color)

@@ -18,16 +18,16 @@ void color_picker(Nara::Color *in_color);
 void led_picker(Nara::Sayo *sayo, Nara::Color *color, int buttons, int *key, int fn);
 
 // The led mode switcher element
-void led_mode_switcher(Nara::Sayo *sayo, int key, int fn);
+Nara::LED_Modes led_mode_switcher(Nara::Sayo *sayo, int key, int fn);
 
 // The color mode switcher element
-void color_mode_switcher(Nara::Sayo *sayo, int key, int fn);
+Nara::LED_ColorModes color_mode_switcher(Nara::Sayo *sayo, int key, int fn);
 
 // The color table switcher element
-void color_table_switcher(Nara::Sayo *sayo, int key, int fn);
+int color_table_switcher(Nara::Sayo *sayo, int key, int fn);
 
 // The trigger event switcher element 
-void trigger_event_switcher(Nara::Sayo *sayo, int key, int fn);
+int trigger_event_switcher(Nara::Sayo *sayo, int key, int fn);
 
 
 /* Miscellaneous Windows and Elements*/
