@@ -172,6 +172,105 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 	}
 }
 
+void color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
+{
+	// All possible options
+	const char* items[] = {
+		"Static Color",
+		"Loop Color Tables",
+		"Random Color Tables",
+		"Random Color"
+	};
+
+	// The currently selected item
+	static int selected = 0;
+
+	// The last selected item
+	static int last_selected = 0;
+
+	// The last key passed to this function
+	static int last_key = -1; // -1 to force a reread
+
+	// The last fn layer passed to this function
+	static int last_fn = -1; // -1 to force a reread
+
+
+	// If the key or fn passed isn't the same as the one that was last passed
+	if ((last_key != key) || (last_fn != fn))
+	{
+		last_key = key;
+		last_fn = fn;
+
+		switch (sayo->ReadColorMode(key, fn))
+		{
+			case Nara::STATIC_COLOR:
+				selected = 0;
+				break;
+			
+			case Nara::LOOP_COLOR_TABLES:
+				selected = 1;
+				break;
+			
+			case Nara::RANDOM_COLOR_TABLES:
+				selected = 2;
+				break;
+			
+			case Nara::RANDOM_COLOR:
+				selected = 3;
+				break;
+		}
+	}
+
+
+	// Combo widget
+	if (ImGui::BeginCombo("Color Mode", items[selected]))
+	{
+		for (int i = 0; i < IM_COUNTOF(items); i++)
+		{
+			const bool is_selected = (selected == i);
+			
+			// If the current item is selected, set the selected item index to the current item's
+			if (ImGui::Selectable(items[i], is_selected)) 
+			{
+				selected = i;
+			}
+
+			// Set initial focus when opening the combo
+			if (selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+
+	// Evaluate selected element and send the corresponding configuration command when changed
+	if (selected != last_selected)
+	{
+		last_selected = selected;
+
+		switch (selected)
+		{
+			case 0:
+				sayo->SetColorMode(key, fn, Nara::STATIC_COLOR);
+				break;
+
+			case 1:
+				sayo->SetColorMode(key, fn, Nara::LOOP_COLOR_TABLES);
+				break;
+			
+			case 2:
+				sayo->SetColorMode(key, fn, Nara::RANDOM_COLOR_TABLES);
+				break;
+			
+			case 3:
+				sayo->SetColorMode(key, fn, Nara::RANDOM_COLOR);
+				break;
+		}
+	}
+}
+
 void color_picker(Nara::Color *in_color)
 {
 	static float color[3] = { 0 };
@@ -225,7 +324,9 @@ void color_config(Nara::Sayo *sayo)
 	// Light picker
 	led_picker(sayo, &color, btns, &btn_number, fn);
 	
+	// Light effects
 	led_mode_switcher(sayo, btn_number, fn);
+	color_mode_switcher(sayo, btn_number, fn);
 
 	ImGui::NewLine();
 
