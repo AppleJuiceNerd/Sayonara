@@ -11,6 +11,31 @@
 #include "gui.h"
 
 
+void array_combo(const char *label, const char **items, int *selected, int size)
+{
+	// Combo element
+	if (ImGui::BeginCombo(label, items[*selected]))
+	{
+		for (int i = 0; i < size; i++)
+		{
+			const bool is_selected = (*selected == i);
+			
+			// If the current item is selected, set the selected item index to the current item's
+			if (ImGui::Selectable(items[i], is_selected)) 
+			{
+				*selected = i;
+			}
+
+			// Set initial focus when opening the combo
+			if (selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+}
+
 void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 {
 	// All possible options
@@ -96,27 +121,7 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 	}
 
 
-	// Combo element
-	if (ImGui::BeginCombo("Light Mode", items[selected]))
-	{
-		for (int i = 0; i < IM_COUNTOF(items); i++)
-		{
-			const bool is_selected = (selected == i);
-			
-			// If the current item is selected, set the selected item index to the current item's
-			if (ImGui::Selectable(items[i], is_selected)) 
-			{
-				selected = i;
-			}
-
-			// Set initial focus when opening the combo
-			if (selected)
-			{
-				ImGui::SetItemDefaultFocus();
-			}
-		}
-		ImGui::EndCombo();
-	}
+	array_combo("Light Mode", items, &selected, IM_COUNTOF(items));
 
 	// Evaluate selected element and send the corresponding configuration command when changed
 	if (selected != last_selected)
@@ -222,27 +227,7 @@ void color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 	}
 
 
-	// Combo widget
-	if (ImGui::BeginCombo("Color Mode", items[selected]))
-	{
-		for (int i = 0; i < IM_COUNTOF(items); i++)
-		{
-			const bool is_selected = (selected == i);
-			
-			// If the current item is selected, set the selected item index to the current item's
-			if (ImGui::Selectable(items[i], is_selected)) 
-			{
-				selected = i;
-			}
-
-			// Set initial focus when opening the combo
-			if (selected)
-			{
-				ImGui::SetItemDefaultFocus();
-			}
-		}
-		ImGui::EndCombo();
-	}
+	array_combo("Color Mode", items, &selected, IM_COUNTOF(items));
 
 
 	// Evaluate selected element and send the corresponding configuration command when changed
