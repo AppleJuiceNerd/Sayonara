@@ -68,7 +68,7 @@ void sn_window()
 		ImGui::BeginChild("Sidebar", ImVec2(ImGui::GetContentRegionAvail().x * 0.1f, ImGui::GetContentRegionAvail().y), sidebar_flags);
 
 		ImGui::RadioButton("Lights", &sidebar_window, 0);
-		ImGui::RadioButton("Keybinding", &sidebar_window, 1);
+		ImGui::RadioButton("Color Tables", &sidebar_window, 1);
 
 		ImGui::EndChild();
 
