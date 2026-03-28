@@ -23,6 +23,9 @@ void led_mode_switcher(Nara::Sayo *sayo, int key, int fn);
 // The color mode switcher element
 void color_mode_switcher(Nara::Sayo *sayo, int key, int fn);
 
+// The color table switcher element
+void color_mode_switcher(Nara::Sayo *sayo, int key, int fn);
+
 
 /* Miscellaneous Windows and Elements*/
 
