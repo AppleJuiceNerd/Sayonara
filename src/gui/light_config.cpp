@@ -326,6 +326,13 @@ int trigger_event_switcher(Nara::Sayo *sayo, int key, int fn)
 
 	return sayo->GetLightTriggerEvent(key, fn);
 }
+
+void light_effect_manager(Nara::Sayo *sayo, int key, int fn)
+{
+	led_mode_switcher(sayo, key, fn);
+	color_mode_switcher(sayo, key, fn);
+	color_table_switcher(sayo, key, fn);
+	trigger_event_switcher(sayo, key, fn);
 }
 
 void color_picker(Nara::Color *in_color)
@@ -382,10 +389,7 @@ void color_config(Nara::Sayo *sayo)
 	led_picker(sayo, &color, btns, &btn_number, fn);
 	
 	// Light effects
-	led_mode_switcher(sayo, btn_number, fn);
-	color_mode_switcher(sayo, btn_number, fn);
-	color_table_switcher(sayo, btn_number, fn);
-	trigger_event_switcher(sayo, btn_number, fn);
+	light_effect_manager(sayo, btn_number, fn);
 
 	ImGui::NewLine();
 
