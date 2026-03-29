@@ -1,5 +1,6 @@
 // C/C++ stuff
 #include <format>
+#include <functional>
 
 // imgui
 #include "imgui.h"
@@ -40,6 +41,53 @@ void array_combo(const char *label, const char **items, int *selected, int size)
 	}
 }
 
+// TODO: The combo currently always sends a packet, and if variables were static it would link all combos; This should be fixed.
+int sn_cc_combo(
+	const char *label,
+	int key,
+	int fn,
+	const char **items,
+	int arr_size,
+	std::function<void(int, int, int)> set_value,
+	std::function<int(int, int)> get_value
+)
+{
+	// The currently selected item
+	int selected = 0;
+
+	// The last selected item
+	int last_selected = 0;
+
+	// The last key passed to this function
+	int last_key = -1; // -1 to force a reread
+
+	// The last fn layer passed to this function
+	int last_fn = -1; // -1 to force a reread
+
+
+	// If the key or fn passed isn't the same as the one that was last passed
+	if ((last_key != key) || (last_fn != fn))
+	{
+		last_key = key;
+		last_fn = fn;
+
+		selected = get_value(key, fn);
+	}
+
+	array_combo(label, items, &selected, arr_size);
+
+	// Evaluate selected element and send the corresponding configuration command when changed
+	if (selected != last_selected)
+	{
+		last_selected = selected;
+
+		set_value(key, fn, selected);
+	}
+
+	return get_value(key, fn);
+}
+
+// TODO: There should be a way to use sn_cc_combo with LED Modes
 Nara::LED_Modes led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 {
 	// All possible options
@@ -179,7 +227,7 @@ Nara::LED_Modes led_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 		}
 	}
 
-	return sayo->ReadLightMode(key, fn);
+	return (Nara::LED_Modes) sayo->ReadLightMode(key, fn);
 }
 
 Nara::LED_ColorModes color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
@@ -192,39 +240,24 @@ Nara::LED_ColorModes color_mode_switcher(Nara::Sayo *sayo, int key, int fn)
 		"Random Color"
 	};
 
-	// The currently selected item
-	static int selected = 0;
 
-	// The last selected item
-	static int last_selected = 0;
+	auto set = std::bind(
+		&Nara::Sayo::SetColorMode,
+		(*sayo),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3
+	);
 
-	// The last key passed to this function
-	static int last_key = -1; // -1 to force a reread
+	auto get = std::bind(
+		&Nara::Sayo::ReadColorMode,
+		(*sayo),
+		std::placeholders::_1,
+		std::placeholders::_2
+	);
 
-	// The last fn layer passed to this function
-	static int last_fn = -1; // -1 to force a reread
 
-
-	// If the key or fn passed isn't the same as the one that was last passed
-	if ((last_key != key) || (last_fn != fn))
-	{
-		last_key = key;
-		last_fn = fn;
-
-		selected = sayo->ReadColorMode(key, fn);
-	}
-
-	array_combo("Color Mode", items, &selected, IM_COUNTOF(items));
-
-	// Evaluate selected element and send the corresponding configuration command when changed
-	if (selected != last_selected)
-	{
-		last_selected = selected;
-
-		sayo->SetColorMode(key, fn, (Nara::LED_ColorModes) selected);
-	}
-
-	return sayo->ReadColorMode(key, fn);
+	return (Nara::LED_ColorModes) sn_cc_combo("Color Mode", key, fn, items, IM_COUNTOF(items), set, get);
 }
 
 int color_table_switcher(Nara::Sayo *sayo, int key, int fn)
@@ -240,39 +273,24 @@ int color_table_switcher(Nara::Sayo *sayo, int key, int fn)
 		"Color Table 6",
 	};
 
-	// The currently selected item
-	static int selected = 0;
 
-	// The last selected item
-	static int last_selected = 0;
+	auto set = std::bind(
+		&Nara::Sayo::SetLightColorTable,
+		(*sayo),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3
+	);
 
-	// The last key passed to this function
-	static int last_key = -1; // -1 to force a reread
+	auto get = std::bind(
+		&Nara::Sayo::GetLightColorTable,
+		(*sayo),
+		std::placeholders::_1,
+		std::placeholders::_2
+	);
 
-	// The last fn layer passed to this function
-	static int last_fn = -1; // -1 to force a reread
 
-
-	// If the key or fn passed isn't the same as the one that was last passed
-	if ((last_key != key) || (last_fn != fn))
-	{
-		last_key = key;
-		last_fn = fn;
-
-		selected = sayo->GetLightColorTable(key, fn);
-	}
-
-	array_combo("Color Table", items, &selected, IM_COUNTOF(items));
-
-	// Evaluate selected element and send the corresponding configuration command when changed
-	if (selected != last_selected)
-	{
-		last_selected = selected;
-
-		sayo->SetLightColorTable(key, fn, selected);
-	}
-
-	return sayo->GetLightColorTable(key, fn);
+	return sn_cc_combo("Color Table", key, fn, items, IM_COUNTOF(items), set, get);
 }
 
 int trigger_event_switcher(Nara::Sayo *sayo, int key, int fn)
@@ -291,40 +309,23 @@ int trigger_event_switcher(Nara::Sayo *sayo, int key, int fn)
 		"Script_Stop"
 	};
 
-	// The currently selected item
-	static int selected = 0;
+	auto set = std::bind(
+		&Nara::Sayo::SetLightTriggerEvent,
+		(*sayo),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3
+	);
 
-	// The last selected item
-	static int last_selected = 0;
-
-	// The last key passed to this function
-	static int last_key = -1; // -1 to force a reread
-
-	// The last fn layer passed to this function
-	static int last_fn = -1; // -1 to force a reread
-
-
-	// If the key or fn passed isn't the same as the one that was last passed
-	if ((last_key != key) || (last_fn != fn))
-	{
-		last_key = key;
-		last_fn = fn;
+	auto get = std::bind(
+		&Nara::Sayo::GetLightTriggerEvent,
+		(*sayo),
+		std::placeholders::_1,
+		std::placeholders::_2
+	);
 
 
-		selected = sayo->GetLightTriggerEvent(key, fn);
-	}
-
-	array_combo("Trigger Event", items, &selected, IM_COUNTOF(items));
-
-	// Evaluate selected element and send the corresponding configuration command when changed
-	if (selected != last_selected)
-	{
-		last_selected = selected;
-
-		sayo->SetLightTriggerEvent(key, fn, selected);
-	}
-
-	return sayo->GetLightTriggerEvent(key, fn);
+	return sn_cc_combo("Trigger Event", key, fn, items, IM_COUNTOF(items), set, get);
 }
 
 void light_effect_manager(Nara::Sayo *sayo, int key, int fn)
