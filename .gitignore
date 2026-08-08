@@ -1,6 +1,7 @@
 .cache
 .vscode
 build
+.clangd
 
 # Should I be tracking this?
 CMakeCache.txt
