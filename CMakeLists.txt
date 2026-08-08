@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 20)
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Disable compiler warnings
+set(COMPILE_WARNING_AS_ERROR OFF)
 
 # Dependencies
 # Raylib (automatically downloaded)
