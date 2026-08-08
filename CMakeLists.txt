@@ -47,6 +47,7 @@ add_executable(${PROJECT_NAME}
 	# Application
   src/main.cpp
   src/gui/main_window.cpp
+  src/gui/setup.cpp
   src/gui/light_config.cpp
   src/gui/misc.cpp
 

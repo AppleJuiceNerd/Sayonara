@@ -4,6 +4,9 @@
 // The main Sayonara window
 void sn_window();
 
+// Everything that sets up the window
+void gui_setup();
+
 
 /* Everything in the Color Config section */
 

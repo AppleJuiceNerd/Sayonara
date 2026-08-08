@@ -10,16 +10,14 @@
 // GUI stuff
 #include "gui.h"
 
+
+
 void sn_window()
 {
 	// Setup device
 	static Nara::Sayo sayo = Nara::Sayo();
 
-	// Make this window fullscreen
-	static bool use_work_area = false;
-	const ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(use_work_area ? viewport->WorkPos : viewport->Pos);
-	ImGui::SetNextWindowSize(use_work_area ? viewport->WorkSize : viewport->Size);
+	gui_setup();
 
 	// Specifies whether the about window is open or not
 	static bool about_window_open = false;
@@ -39,15 +37,6 @@ void sn_window()
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_NoBringToFrontOnFocus;
 
-	// Setup ImGui style
-	ImGuiStyle& style = ImGui::GetStyle();
-	style.WindowRounding = 2;
-	style.ChildRounding = 2;
-	style.FrameRounding = 2;
-	style.PopupRounding = 2;
-	style.GrabRounding = 2;
-
-
 	// Start drawing the window
 	ImGui::SetNextItemAllowOverlap();
 	if (ImGui::Begin("SayoNara", NULL, window_flags) && sayo.get_device() != NULL)
@@ -62,7 +51,6 @@ void sn_window()
 			
 		}
 		ImGui::EndMenuBar();
-
 
 
 		ImGui::BeginChild("Sidebar", ImVec2(ImGui::GetContentRegionAvail().x * 0.1f, ImGui::GetContentRegionAvail().y), sidebar_flags);
